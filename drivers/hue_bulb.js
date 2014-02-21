@@ -1,11 +1,11 @@
-var LEDDriver = module.exports = function() {
-  this.type = 'led';
-  this.name = "joes-office-led";
-  this.data = {};
+var HueBulbDriver = module.exports = function() {
+  this.type = 'huebulb';
+  this.name = data.id;
+  this.data = data;
   this.state = 'off';
 };
 
-LEDDriver.prototype.init = function(config) {
+HueBulbDriver.prototype.init = function(config) {
   config
     .when('on', { allow: ['turn-off', 'toggle'] })
     .when('off', { allow: ['turn-on', 'toggle'] })
@@ -14,17 +14,17 @@ LEDDriver.prototype.init = function(config) {
     .map('toggle', this.toggle)
 };
 
-LEDDriver.prototype.turnOn = function(cb) {
+HueBulbDriver.prototype.turnOn = function(cb) {
   this.state = 'on';
   cb();
 };
 
-LEDDriver.prototype.turnOff = function(cb) {
+HueBulbDriver.prototype.turnOff = function(cb) {
   this.state = 'off';
   cb();
 };
 
-LEDDriver.prototype.toggle = function(cb) {
+HueBulbDriver.prototype.toggle = function(cb) {
   if (this.state === 'off') {
     this.call('turn-on');
     cb();

@@ -9,13 +9,12 @@ var HueHubDriver = module.exports = function(data) {
     this.state = 'registered';
 };
 
-PhotosensorDriver.prototype.init = function(config) {
+HueHubDriver.prototype.init = function(config) {
   config
     .when('unregistered', { allow: ['register'] })
     .map('register', this.register);
 };
 
-PhotosensorDriver.prototype.register = function(cb) {
-
+HueHubDriver.prototype.register = function(cb) {
   cb();
 };
