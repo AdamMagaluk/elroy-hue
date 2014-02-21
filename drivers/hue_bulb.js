@@ -1,7 +1,11 @@
-var HueBulbDriver = module.exports = function() {
+var hue = require("node-hue-api")
+  , lightState = hue.lightState;
+
+var HueBulbDriver = module.exports = function(data,hue) {
   this.type = 'huebulb';
   this.name = data.id;
   this.data = data;
+  this.hue = hue;
   this.state = 'off';
 };
 
@@ -15,13 +19,27 @@ HueBulbDriver.prototype.init = function(config) {
 };
 
 HueBulbDriver.prototype.turnOn = function(cb) {
-  this.state = 'on';
-  cb();
+  var self = this;
+  var state = lightState.create().on();
+  this.hue.setLightState(this.data.id,state,function(err){
+    if(err)
+      return cb(err);
+
+    self.state = 'on';
+    cb();  
+  });
 };
 
 HueBulbDriver.prototype.turnOff = function(cb) {
-  this.state = 'off';
-  cb();
+  var self = this;
+  var state = lightState.create().off();
+  this.hue.setLightState(this.data.id,state,function(err){
+    if(err)
+      return cb(err);
+
+    self.state = 'off';
+    cb();  
+  });
 };
 
 HueBulbDriver.prototype.toggle = function(cb) {
