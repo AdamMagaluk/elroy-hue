@@ -6,23 +6,19 @@ var util = require('util')
 var HueScout = module.exports = function() {
   this.interval = 15000;
   EventEmitter.call(this);
+  this.drivers = ['huehub'];
 };
 util.inherits(HueScout, EventEmitter);
 
-HueScout.prototype.init = function(registry,cb) {
-
-  // init devices in registry first.
-  registry.json_devices.map(function(device){
-    if(device.type !== 'huehub')
-      return;
-    registry.setupDevice(HueHubDriver,device.data);
-  });
-
-  cb();
-
+HueScout.prototype.init = function(next) {
   // start search logic
   this.search();
   setInterval(this.search.bind(this),this.interval);
+  next();
+};
+
+HueScout.prototype.provision = function(device) {
+  return [HueHubDriver,device.data];
 };
 
 HueScout.prototype.search = function() {
@@ -34,6 +30,7 @@ HueScout.prototype.search = function() {
     hubs.forEach(function(hueHub){
       self.emit('discover', HueHubDriver,hueHub);
     });
+
   });
 };
 
